@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Exam Insights</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f4f9; }
+        h1 { color: #333; text-align: center; }
+        .controls { text-align: center; margin-bottom: 20px; }
+        select, button { padding: 10px; font-size: 16px; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #0056b3; }
+        #results { margin-top: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .card h2 { margin-top: 0; color: #007bff; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 5px; }
+        .loading { text-align: center; font-style: italic; color: #666; display: none; }
+        .error { color: red; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <h1>Student Exam Insights</h1>
+
+    <div class="controls">
+        <select id="subjectSelect">
+            <option value="DSA Basics">DSA Basics</option>
+            <option value="Java Basics">Java Basics</option>
+            <option value="SED Basics">SED Basics</option>
+        </select>
+        <button onclick="generateInsights()">Generate Insights</button>
+    </div>
+
+    <div id="loading" class="loading">Analyzing papers with Gemini AI... Please wait...</div>
+    <div id="error" class="error"></div>
+
+    <div id="results"></div>
+
+    <script>
+        async function generateInsights() {
+            const subject = document.getElementById('subjectSelect').value;
+            const resultsDiv = document.getElementById('results');
+            const loadingDiv = document.getElementById('loading');
+            const errorDiv = document.getElementById('error');
+
+            resultsDiv.innerHTML = '';
+            errorDiv.textContent = '';
+            loadingDiv.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/insights/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subject })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to generate insights');
+                }
+
+                displayInsights(data.insight);
+            } catch (err) {
+                errorDiv.textContent = err.message;
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        function displayInsights(insight) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = '';
+
+            // Repeated Questions
+            html += '<div class="card"><h2>Repeated Questions</h2><ul>';
+            insight.repeatedQuestions.forEach(q => {
+                html += `<li><strong>${q.question}</strong> (Frequency: ${q.frequency})</li>`;
+            });
+            html += '</ul></div>';
+
+            // Unit Weightage
+            html += '<div class="card"><h2>Unit Weightage</h2><ul>';
+            insight.unitWeightage.forEach(u => {
+                html += `<li>${u.unit}: <strong>${u.weightage}</strong></li>`;
+            });
+            html += '</ul></div>';
+
+            // Important Topics
+            html += '<div class="card"><h2>Important Topics</h2><ul>';
+            insight.importantTopics.forEach(t => {
+                html += `<li>${t}</li>`;
+            });
+            html += '</ul></div>';
+
+             // Frequently Tested Concepts
+             html += '<div class="card"><h2>Frequently Tested Concepts</h2><ul>';
+            insight.frequentlyTestedConcepts.forEach(c => {
+                html += `<li>${c}</li>`;
+            });
+            html += '</ul></div>';
+
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+
+</body>
+</html>

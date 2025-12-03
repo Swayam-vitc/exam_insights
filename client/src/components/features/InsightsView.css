@@ -1,0 +1,282 @@
+.insights-view {
+    padding: var(--spacing-xl);
+    max-width: 1400px;
+    margin: 0 auto;
+    animation: fadeIn var(--transition-base) ease-out;
+}
+
+.insights-control {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.control-content {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--spacing-lg);
+}
+
+.control-group {
+    flex: 1;
+}
+
+.control-label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+}
+
+.control-select {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-fast);
+}
+
+.control-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-3xl) 0;
+}
+
+.insights-results {
+    display: grid;
+    gap: var(--spacing-xl);
+}
+
+.insight-card {
+    animation: slideInUp var(--transition-base) ease-out;
+}
+
+.insight-icon-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-glass-border);
+}
+
+.insight-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.insight-icon-primary {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%);
+    color: var(--color-primary);
+}
+
+.insight-icon-secondary {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(236, 72, 153, 0.1) 100%);
+    color: var(--color-secondary);
+}
+
+.insight-icon-accent {
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.2) 0%, rgba(20, 184, 166, 0.1) 100%);
+    color: var(--color-accent);
+}
+
+.insight-icon-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+    color: var(--color-warning);
+}
+
+.insight-description {
+    flex: 1;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    margin: 0;
+}
+
+.repeated-questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.question-item {
+    padding: var(--spacing-md);
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--color-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+    transition: all var(--transition-fast);
+}
+
+.question-item:hover {
+    transform: translateX(4px);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.question-text {
+    flex: 1;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.frequency-badge {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+}
+
+.unit-weightage-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.weightage-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.weightage-label {
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+}
+
+.weightage-bar {
+    height: 32px;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+}
+
+.weightage-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 var(--spacing-md);
+    transition: width var(--transition-slow);
+}
+
+.weightage-value {
+    color: white;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+}
+
+.topics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.topic-tag {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-full);
+    color: var(--color-accent);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-fast);
+}
+
+.topic-tag:hover {
+    background: rgba(20, 184, 166, 0.2);
+    transform: translateY(-2px);
+}
+
+.concepts-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.concept-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+}
+
+.concept-bullet {
+    color: var(--color-warning);
+    font-size: var(--font-size-xl);
+    line-height: 1;
+}
+
+.concept-text {
+    flex: 1;
+}
+
+.no-data {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: var(--spacing-xl) 0;
+}
+
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-3xl);
+}
+
+.empty-icon {
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-lg);
+}
+
+.empty-title {
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.empty-text {
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .insights-view {
+        padding: var(--spacing-lg);
+    }
+
+    .control-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .question-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .topics-grid {
+        justify-content: center;
+    }
+}
