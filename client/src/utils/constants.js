@@ -11,6 +11,7 @@ export const SUBJECTS = [
     'ETC',
     'English',
     'Kannada',
+    'Signals and Systems',
 ];
 
 export const EXAM_TYPES = ['IA1', 'IA2', 'SEE'];

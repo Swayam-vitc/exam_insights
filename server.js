@@ -26,11 +26,13 @@ app.get('/', (req, res) => {
 });
 
 // Import Routes
+const authRoutes = require('./routes/authRoutes');
 const paperRoutes = require('./routes/paperRoutes');
 const insightRoutes = require('./routes/insightRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 
+app.use('/api/auth', authRoutes);
 app.use('/api/papers', paperRoutes);
 app.use('/api/insights', insightRoutes);
 app.use('/api/ai', aiRoutes);

@@ -1,9 +1,10 @@
 import { NavLink } from 'react-router-dom';
-import { Library, Upload, Brain, FileText } from 'lucide-react';
+import { Home, Library, Upload, Brain, FileText } from 'lucide-react';
 import './Sidebar.css';
 
 const Sidebar = () => {
     const navItems = [
+        { path: '/', icon: Home, label: 'Dashboard' },
         { path: '/library', icon: Library, label: 'Library' },
         { path: '/upload', icon: Upload, label: 'Upload Papers' },
         { path: '/insights', icon: Brain, label: 'Insights' },

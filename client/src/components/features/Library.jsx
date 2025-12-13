@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useToast } from '../../context/ToastContext';
-import { getPapers, downloadPaper, getInsights, generateInsights, getChatHistory, sendChatMessage, clearChatHistory } from '../../services/api';
+import { getPapers, downloadPaper, getInsights, generateInsights, getPaperInsights, getChatHistory, sendChatMessage, clearChatHistory } from '../../services/api';
 import { SUBJECTS, EXAM_TYPES } from '../../utils/constants';
 import { formatDate } from '../../utils/helpers';
 import Card from '../ui/Card';
@@ -113,9 +113,9 @@ const Library = () => {
         setChatMessages([]);
 
         try {
-            // Load both insights and chat history
+            // Load both paper insights and chat history
             const [insightsData, chatData] = await Promise.all([
-                getInsights(paper.subject).catch(() => null),
+                getPaperInsights(paper._id).catch(() => null),
                 getChatHistory(paper._id).catch(() => ({ messages: [] }))
             ]);
 
@@ -162,7 +162,7 @@ const Library = () => {
     };
 
     const handleClearChat = async () => {
-        if (!selectedPaper || !window.confirm('Clear all chat history for this paper?')) return;
+        if (!selectedPaper) return;
 
         try {
             await clearChatHistory(selectedPaper._id);
@@ -473,34 +473,81 @@ const Library = () => {
                                 <LoadingSpinner text="Loading insights..." />
                             ) : paperInsights ? (
                                 <div className="insights-content">
-                                    {paperInsights.repeatedQuestions && paperInsights.repeatedQuestions.length > 0 && (
+                                    {/* Paper Metadata */}
+                                    <div className="insight-metadata">
+                                        <div className="metadata-card">
+                                            <Calendar size={20} />
+                                            <div>
+                                                <span className="metadata-label">Exam Date</span>
+                                                <span className="metadata-value">
+                                                    {paperInsights.examDate || 'Not Available'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="metadata-card">
+                                            <FileText size={20} />
+                                            <div>
+                                                <span className="metadata-label">Total Questions</span>
+                                                <span className="metadata-value">
+                                                    {paperInsights.totalQuestions || 0}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="metadata-card">
+                                            <BookOpen size={20} />
+                                            <div>
+                                                <span className="metadata-label">Semester</span>
+                                                <span className="metadata-value">
+                                                    Sem {paperInsights.semester}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Questions List */}
+                                    {paperInsights.questions && paperInsights.questions.length > 0 && (
                                         <div className="insight-section">
-                                            <h3>Repeated Questions</h3>
-                                            <ul>
-                                                {paperInsights.repeatedQuestions.map((q, i) => (
-                                                    <li key={i}>{q.question} (Frequency: {q.frequency})</li>
+                                            <h3>📝 Questions in this Paper</h3>
+                                            <div className="questions-list">
+                                                {paperInsights.questions.map((q, i) => (
+                                                    <div key={i} className="question-item">
+                                                        <div className="question-number">Q{q.number}</div>
+                                                        <div className="question-details">
+                                                            <div className="question-text">{q.text}</div>
+                                                            {q.section && q.section !== 'Unspecified' && (
+                                                                <span className="question-section">{q.section}</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 ))}
-                                            </ul>
+                                            </div>
                                         </div>
                                     )}
-                                    {paperInsights.importantTopics && paperInsights.importantTopics.length > 0 && (
-                                        <div className="insight-section">
-                                            <h3>Important Topics</h3>
+
+                                    {/* Topics Section */}
+                                    {paperInsights.topics && paperInsights.topics.length > 0 && (
+                                        <div className="insight-section topics-section">
+                                            <h3>🎯 Topics Covered</h3>
                                             <div className="topics-tags">
-                                                {paperInsights.importantTopics.map((topic, i) => (
+                                                {paperInsights.topics.map((topic, i) => (
                                                     <span key={i} className="topic-tag">{topic}</span>
                                                 ))}
                                             </div>
+                                        </div>
+                                    )}
+
+                                    {/* Show message if no questions found */}
+                                    {(!paperInsights.questions || paperInsights.questions.length === 0) && (
+                                        <div className="no-data-message">
+                                            <p>No questions could be extracted from this paper.</p>
+                                            <p className="help-text">The PDF may need better OCR processing.</p>
                                         </div>
                                     )}
                                 </div>
                             ) : (
                                 <div className="no-insights">
                                     <Brain size={48} />
-                                    <p>No insights available for this subject yet.</p>
-                                    <Button variant="primary" onClick={handleGenerateInsights}>
-                                        Generate Insights
-                                    </Button>
+                                    <p>No insights available for this paper yet.</p>
                                 </div>
                             )}
 
@@ -530,7 +577,17 @@ const Library = () => {
                                         <>
                                             {chatMessages.map((msg, idx) => (
                                                 <div key={idx} className={`chat-message ${msg.role}`}>
-                                                    <div className="message-content">{msg.content}</div>
+                                                    <div
+                                                        className="message-content"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: msg.content
+                                                                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                                                                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                                                                .replace(/(\d+)\.\s+\*\*/g, '<br/><br/><strong>$1. ')
+                                                                .replace(/\*\*/g, '</strong>')
+                                                                .replace(/\n/g, '<br/>')
+                                                        }}
+                                                    />
                                                     <div className="message-time">
                                                         {new Date(msg.timestamp).toLocaleTimeString()}
                                                     </div>
